@@ -8,6 +8,15 @@ This is `not perfect` example, but still it can be used to show MVC approach in 
 2. Copy `.env.example` file to `.env` in root folder of application.
 3. Run `composer install`
 4. Setup all required parameters in `.env`.
+```
+DATABASE_HOST="localhost"
+DATABASE_NAME="database"
+DATABASE_USER="user"
+DATABASE_PASSWORD="password"
+DATABASE_PORT=3306
+```
+5. If you need example database, you can use this `init.sql` - https://github.com/pashkevich-s-d/trainee-program/blob/master/Examples/PDO/init.sql
+
 
 # Details
 
