@@ -1,0 +1,13 @@
+{
+    "name": "pashkevich-s-d/mvc-example",
+    "description": "mvc-example",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "PashkevichSD\\MvcExample\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/dotenv": "^6.0"
+    }
+}
