@@ -1,6 +1,6 @@
 <?php
 
-namespace PashkevichSD\MvcExample\Controller;
+namespace PashkevichSD\MvcExample\Controller\Web;
 
 /**
  * Feel free to remove this controller, it is just an example
