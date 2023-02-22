@@ -8,6 +8,7 @@
         }
     },
     "require": {
-        "symfony/dotenv": "^6.0"
+        "symfony/dotenv": "^6.0",
+        "symfony/http-foundation": "^6.0"
     }
 }

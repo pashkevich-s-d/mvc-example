@@ -17,8 +17,14 @@ class Router
     public function run()
     {
         $uri = $this->getUri();
+        
+        if (empty($this->routes[$_SERVER['REQUEST_METHOD']])) {
+            throw new RouterException('Requested method not found!');
+        }
 
-        foreach ($this->routes as $routeKey => $route) {
+        $routes = $this->routes[$_SERVER['REQUEST_METHOD']];
+
+        foreach ($routes as $routeKey => $route) {
             if(!preg_match("~$routeKey~", $uri)) {
                 continue;
             }
@@ -27,7 +33,7 @@ class Router
 
             $routePath = explode('/', $internalRoute);
 
-            $controllerName = CONTROLLER_NAMESPACE . ucfirst(array_shift($routePath)) . 'Controller';
+            $controllerName = CONTROLLER_NAMESPACE . ucfirst(array_shift($routePath)) . '\\' . ucfirst(array_shift($routePath)) . 'Controller';
             $actionName = 'action' . ucfirst(array_shift($routePath));
 
             if (!method_exists($controllerName, $actionName)) {

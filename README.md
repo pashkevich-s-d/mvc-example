@@ -44,23 +44,23 @@ views
 .env // here you can define ENV specific parameters, such as DATABASE connection
 ```
 
-# Example
+# Example WEB
 
 You would like to crelate `http://your-domain.loc/users/list` page.
 
 1. Create new route in `config/routes.php`:
 
 ```
-'users\/list' => 'users/list',
+'users\/list' => 'web/users/list',
 ```
 
 ```
 Note:
 
 Routes can be defined using regex, example:
-'users\/([0-9]+)' => 'users/view/$1',
+'users\/([0-9]+)' => 'web/users/view/$1',
 
-With such route it will be possible to define such controller:
+With such route it will be possible to define such controller (`Controller/Web` folder):
 
 class UsersController
 {
@@ -117,7 +117,7 @@ class User
 </table>
 ```
 
-4. Create new controller (`src/Controller/UsersController.php`):
+4. Create new controller (`src/Controller/Web/UsersController.php`):
 
 ```
 class UsersController
@@ -138,3 +138,90 @@ class UsersController
 ```
 
 5. Open `http://your-domain.loc/users/list`
+
+
+
+# Example API
+
+In case if you need to create API endpoint `http://your-domain.loc/api/users/1`.
+
+1. Create new route in `config/routes.php` (check proper key: `GET/POST/PUT/DELETE`):
+
+```
+    'GET' => [
+        'api\/users\/([0-9]+)' => 'api/users/view/$1',
+        ...
+```
+
+
+2. Create new model to be able to fetch users data from database (`src/Model/User.php`)
+
+```
+class User
+{
+    public int $id;
+    public string $name;
+    public string $surname;
+
+    public static function findById(int $id, bool $isObjectFormat = true)
+    {
+        $db = Database::getConnection();
+
+        $stmt = $db->prepare('SELECT * FROM users WHERE id=?');
+        $stmt->bindValue(1, $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        if ($isObjectFormat) {
+            $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
+
+            $user = $stmt->fetch();
+        } else {
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return $user;
+    }
+}
+```
+
+3. Create new controller (`src/Controller/Api/UsersController.php`):
+
+```
+namespace PashkevichSD\MvcExample\Controller\Api;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class UsersController
+{
+    public function actionView(string $userId)
+    {
+        $user = User::findById((int) $userId);
+
+        if ($user === false) {
+            $errorResponse = new JsonResponse(['message' => 'No such user!']);
+            $errorResponse->setStatusCode(JsonResponse::HTTP_NOT_FOUND);
+
+            $errorResponse->send();
+
+            return;
+        }
+
+        $response = new JsonResponse(User::findById((int) $userId, false));
+        $response->setStatusCode(JsonResponse::HTTP_OK);
+
+        $response->send();
+    }
+}
+```
+
+4. Send request to `http://your-domain.loc/api/users/1`
+
+```
+Expected response:
+
+{
+    "id": "1",
+    "name": "UserNameFromApi",
+    "surname": "UserSurnameFromApi"
+}
+```

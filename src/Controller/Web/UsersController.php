@@ -1,6 +1,6 @@
 <?php
 
-namespace PashkevichSD\MvcExample\Controller;
+namespace PashkevichSD\MvcExample\Controller\Web;
 
 use PashkevichSD\MvcExample\Component\View;
 use PashkevichSD\MvcExample\Model\User;
